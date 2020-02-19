@@ -80,7 +80,7 @@ public class CompressorIT {
             Map<String, byte[]> inputMap = Collections.singletonMap("test.txt", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.".getBytes());
             File temp = File.createTempFile("test-file", ".tgz");
             temp.deleteOnExit();
-            File resultingTempFile = Compressor.of(inputMap, temp, Suffix.TGZ).toFile();
+            File resultingTempFile = Compressor.of(inputMap, temp.toPath(), Suffix.TGZ).write();
             Map<String, byte[]> outputMap = Decompressor.of(new FileInputStream(temp), Suffix.TGZ).read();
             assertTrue(resultingTempFile.getName().startsWith("test-file"),"Resulting file name should start with \"test-file\"");
             assertTrue(resultingTempFile.getName().endsWith(".tgz"),"Resulting file name should end with \".tgz\"");

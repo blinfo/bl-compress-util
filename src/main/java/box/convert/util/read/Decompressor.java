@@ -16,31 +16,32 @@ import java.util.Map;
 public interface Decompressor {
 
     /**
-     * Reads content of input stream.
+     * Reads content of input stream into a map.
      * <p>
-     * Returns a map where the Keys are the names of the files and the Values
-     * are the file content as a byte arrays.
+     * Returns a map where the Keys are the names of the archived files and the
+     * Values are the file content as a byte arrays.
      *
      * @return Map
      */
     Map<String, byte[]> read();
 
     /**
-     * Returns a Decompressor.
+     * Reads content of file into a map.
      * <p>
-     * Creates a Decompressor from the input file.
+     * Convenicence method for Decompressing an archive file.<br>
+     * Returns a map where the Keys are the names of the archived files and the
+     * Values are the file content as a byte arrays.
      *
-     *
-     * @param file
-     * @return Decompressor
+     * @param file File
+     * @return Map
      */
-    public static Decompressor fromFile(File file) {
+    public static Map<String, byte[]> fromFile(File file) {
         Suffix suffix = file.getName().endsWith(".tar.gz")
                 ? Suffix.TAR_GZ
                 : Suffix.find(file.getName().substring(file.getName().lastIndexOf(".") + 1))
                         .orElse(Suffix.DEFAULT);
         try {
-            return Decompressor.of(new FileInputStream(file), suffix);
+            return Decompressor.of(new FileInputStream(file), suffix).read();
         } catch (FileNotFoundException ex) {
             throw new CompressUtilException("Could not read file: " + file, ex);
         }
@@ -49,7 +50,8 @@ public interface Decompressor {
     /**
      * Returns a Decompressor.
      * <p>
-     * Creates a Decompressor from the input stream.
+     * Creates a Decompressor from the input stream.<br>
+     * The Decompressor will be for the default suffix type.
      *
      * @param input InputStream
      * @return Decompressor
@@ -61,9 +63,8 @@ public interface Decompressor {
     /**
      * Returns a Decompressor.
      * <p>
-     * Creates a Decompressor from the input stream and the provided suffix. The
-     * suffix indicates which type of compression, if any, the input stream
-     * contains.
+     * Creates a Decompressor from the input stream and the provided suffix.<br>
+     * The suffix indicates which type of compression the input stream contains.
      *
      * @param input InputStream
      * @param suffix Suffix

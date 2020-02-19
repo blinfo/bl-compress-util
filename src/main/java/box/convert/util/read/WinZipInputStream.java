@@ -6,7 +6,7 @@ import java.io.InputStream;
 
 /*
  * 
- * Från
+ * From:
  * http://stackoverflow.com/questions/7924895/how-can-i-read-from-a-winzip-self-extracting-exe-zip-file-in-java
  * 
  */

@@ -4,6 +4,7 @@ import box.convert.util.CompressUtilException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,16 +17,16 @@ import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
  */
 class SevenZCompressor extends AbstractCompressor {
 
-    public SevenZCompressor(Map<String, byte[]> content, File result) {
-        super(content, result);
+    public SevenZCompressor(Map<String, byte[]> content, Path path) {
+        super(content, path);
     }
 
     @Override
     protected File process() {
-        try (SevenZOutputFile output = new SevenZOutputFile(result)) {
+        try (SevenZOutputFile output = new SevenZOutputFile(resultPath.toFile())) {
             content.entrySet().forEach(entry -> compressToFile(entry.getKey(), entry.getValue(), output));
-            Logger.getLogger(SevenZCompressor.class.getName()).log(Level.INFO, "Written to file: {0}", result.getPath());
-            return result;
+            Logger.getLogger(SevenZCompressor.class.getName()).log(Level.INFO, "Written to file: {0}", resultPath);
+            return resultPath.toFile();
         } catch (IOException ex) {
             throw new CompressUtilException("Could not create compressed file", ex);
         }

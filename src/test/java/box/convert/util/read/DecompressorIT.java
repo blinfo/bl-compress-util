@@ -62,11 +62,6 @@ public class DecompressorIT {
         assertEquals(SevenZDecompressor.class.getName(), decompressor.getClass().getName());
     }
 
-//    @Test
-//    public void factory_without_Suffix_should_create_a_PlainFileReader() {
-//        Decompressor decompressor = Decompressor.of(getEmptyTextInputStream());
-//        assertEquals(PlainFileReader.class.getName(), decompressor.getClass().getName());
-//    }
     @Test
     public void factory_with_map_for_ZIP_should_create_a_ZipDecompressor() {
         Decompressor decompressor = Decompressor.of(Helper.generateInputStream(3, Suffix.ZIP), Suffix.ZIP);

@@ -1,6 +1,7 @@
 package box.convert.util.write;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -10,15 +11,15 @@ import java.util.Map;
 abstract class AbstractCompressor implements Compressor {
 
     protected final Map<String, byte[]> content;
-    protected final File result;
+    protected final Path resultPath;
 
-    public AbstractCompressor(Map<String, byte[]> content, File result) {
+    public AbstractCompressor(Map<String, byte[]> content, Path path) {
         this.content = content;
-        this.result = result;
+        this.resultPath = path;
     }
 
     @Override
-    public File toFile() {
+    public File write() {
         return process();
     }
 

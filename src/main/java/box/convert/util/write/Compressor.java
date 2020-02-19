@@ -3,10 +3,7 @@ package box.convert.util.write;
 import box.convert.util.CompressUtilException;
 import box.convert.util.Suffix;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.Collections;
+import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -17,53 +14,84 @@ import java.util.Map;
 public interface Compressor {
 
     /**
-     * Writes provided content to the resultFile.
+     * Writes provided content to file.
      *
      * @return File
      */
-    File toFile();
+    File write();
 
-    default OutputStream write() {
-        File file = toFile();
-        try {
-            return new FileOutputStream(file);
-        } catch (FileNotFoundException ex) {
-            throw new CompressUtilException("Could not create output stream from file: " + file, ex);
-        }
+    /**
+     * Writes provided content to file represented by Path.
+     * <p>
+     * Convenience method to create an archive file.<br>
+     * The archive will be of the default suffix type.
+     *
+     * @param content Map&lt;String, byte[]&gt;
+     * @param path Path
+     * @return File
+     */
+    static File toFile(Map<String, byte[]> content, Path path) {
+        return toFile(content, Suffix.DEFAULT, path);
     }
 
     /**
-     * Creates archive file with content from map.
+     * Writes provided content to file represented by Path.
      * <p>
-     * The type of archive will be determined by the resultFile parameter.
+     * Convenience method to create an archive file.<br>
+     * The type of archive generated is specified by the suffix.
      *
-     * @param content
-     * @param resultFile
-     * @return
+     * @param content Map&lt;String, byte[]&gt;
+     * @param suffix Suffix
+     * @param path Path
+     * @return File
      */
-    public static Compressor of(Map<String, byte[]> content, File resultFile) {
+    static File toFile(Map<String, byte[]> content, Suffix suffix, Path path) {
+        return of(content, path, suffix).write();
+    }
+
+    /**
+     * Creates a Compressor.
+     * <p>
+     * The compressor's write-method will create an archive file of the default
+     * suffix type.
+     * <p>
+     * The resulting file is specified by the provided path parameter.<br>
+     * The archive will be of the default suffix type.
+     *
+     *
+     * @param content Map&lt;String, byte[]&gt;
+     * @param path Path
+     * @return Compressor
+     */
+    static Compressor of(Map<String, byte[]> content, Path path) {
         Suffix suffix;
-        if (resultFile.getName().endsWith(Suffix.TAR_GZ.get())) {
+        if (path.toFile().getName().endsWith(Suffix.TAR_GZ.get())) {
             suffix = Suffix.TAR_GZ;
         } else {
-            suffix = Suffix.find(resultFile.getName().substring(resultFile.getName().lastIndexOf(".") + 1)).orElse(Suffix.DEFAULT);
+            suffix = Suffix.find(path.toFile().getName().substring(path.toFile().getName().lastIndexOf(".") + 1)).orElse(Suffix.DEFAULT);
         }
-        return of(content, resultFile, suffix);
+        return of(content, path, suffix);
 
     }
 
     /**
-     * Creates archive file with content from map.
+     * Creates a Compressor.
      * <p>
+     * The compressor's write-method will create an archive file of the default
+     * suffix type.
+     * <p>
+     * The resulting file is specified by the provided path parameter.<br>
      * The type of archive generated is specified by the suffix.
      *
      *
-     * @param content
-     * @param suffix
-     * @param resultFile
-     * @return
+     * @param content Map&lt;String, byte[]&gt;
+     * @param suffix Suffix
+     * @param path Path
+     * @return Compressor
+     * @throws CompressUtilException If the format specified by the suffix is
+     * not writeable.
      */
-    public static Compressor of(Map<String, byte[]> content, File resultFile, Suffix suffix) {
+    static Compressor of(Map<String, byte[]> content, Path path, Suffix suffix) {
         if (!suffix.isWriteable()) {
             throw new CompressUtilException("The file format \"" + suffix.get() + "\" is not supported");
         }
@@ -71,15 +99,15 @@ public interface Compressor {
             case EAR:
             case JAR:
             case WAR:
-                return new JarCompressor(content, resultFile);
+                return new JarCompressor(content, path);
             case SEVEN_Z:
-                return new SevenZCompressor(content, resultFile);
+                return new SevenZCompressor(content, path);
             case TAR_GZ:
             case TGZ:
-                return new TgzCompressor(content, resultFile);
+                return new TgzCompressor(content, path);
             case ZIP:
             default:
-                return new ZipCompressor(content, resultFile);
+                return new ZipCompressor(content, path);
         }
     }
 }

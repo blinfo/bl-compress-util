@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +20,7 @@ import org.apache.commons.compress.utils.IOUtils;
  */
 class JarCompressor extends AbstractCompressor {
 
-    public JarCompressor(Map<String, byte[]> content, File result) {
+    public JarCompressor(Map<String, byte[]> content, Path result) {
         super(content, result);
     }
 
@@ -34,17 +35,17 @@ class JarCompressor extends AbstractCompressor {
             }
         });
         IOUtils.closeQuietly(jarFile);
-        Logger.getLogger(JarCompressor.class.getName()).log(Level.INFO, "Written to file: {0}", result.getPath());
-        return result;
+        Logger.getLogger(JarCompressor.class.getName()).log(Level.INFO, "Written to file: {0}", resultPath);
+        return resultPath.toFile();
     }
 
     private JarArchiveOutputStream createJarFile() {
         try {
-            JarArchiveOutputStream outputStream = new JarArchiveOutputStream(new FileOutputStream(result));
+            JarArchiveOutputStream outputStream = new JarArchiveOutputStream(new FileOutputStream(resultPath.toFile()));
             outputStream.setCreateUnicodeExtraFields(JarArchiveOutputStream.UnicodeExtraFieldPolicy.ALWAYS);
             return outputStream;
         } catch (FileNotFoundException ex) {
-            throw new CompressUtilException("Could not find file: " + result.getAbsolutePath(), ex);
+            throw new CompressUtilException("Could not find file: " + resultPath, ex);
         }
     }
 

@@ -41,7 +41,7 @@ public class Helper {
         try {
             File file = File.createTempFile("testfile", suffix.get());
             file.deleteOnExit();
-            Compressor.of(generateMap(numberOfEntries), file, suffix).toFile();
+            Compressor.of(generateMap(numberOfEntries), file.toPath(), suffix).write();
             return file;
         } catch (IOException ex) {
             throw new CompressUtilException(ex);
@@ -58,7 +58,7 @@ public class Helper {
 
     public static File createTestFile(Suffix suffix) throws IOException {
         Map<String, byte[]> content = createContentMap();
-        File temp = Compressor.of(content, File.createTempFile("non-ascii-entries", "." + suffix.get())).toFile();
+        File temp = Compressor.of(content, File.createTempFile("non-ascii-entries", "." + suffix.get()).toPath()).write();
         temp.deleteOnExit();
         return temp;
     }
