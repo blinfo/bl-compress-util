@@ -17,6 +17,9 @@ public enum Suffix {
 
     /**
      * <u>Exe</u>cutable.
+     * <p>
+     * Currently only readable.
+     * 
      */
     EXE,
 
