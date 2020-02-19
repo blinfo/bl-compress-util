@@ -85,16 +85,8 @@ public interface Decompressor {
             case TGZ:
                 return TgzDecompressor.from(input);
             case ZIP:
-                return ZipDecompressor.from(input);
-            case CSV:
-            case TXT:
-            case JSON:
-            case GIF:
-            case JPG:
-            case PNG:
-            case PDF:
             default:
-                return PlainFileReader.of(input, suffix);
+                return ZipDecompressor.from(input);
         }
     }
 

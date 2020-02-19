@@ -2,10 +2,7 @@ package box.convert.util.read;
 
 import box.convert.util.Helper;
 import box.convert.util.Suffix;
-import box.convert.util.write.Compressor;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.Assert;
@@ -65,12 +62,11 @@ public class DecompressorIT {
         assertEquals(SevenZDecompressor.class.getName(), decompressor.getClass().getName());
     }
 
-    @Test
-    public void factory_without_Suffix_should_create_a_PlainFileReader() {
-        Decompressor decompressor = Decompressor.of(getEmptyTextInputStream());
-        assertEquals(PlainFileReader.class.getName(), decompressor.getClass().getName());
-    }
-
+//    @Test
+//    public void factory_without_Suffix_should_create_a_PlainFileReader() {
+//        Decompressor decompressor = Decompressor.of(getEmptyTextInputStream());
+//        assertEquals(PlainFileReader.class.getName(), decompressor.getClass().getName());
+//    }
     @Test
     public void factory_with_map_for_ZIP_should_create_a_ZipDecompressor() {
         Decompressor decompressor = Decompressor.of(Helper.generateInputStream(3, Suffix.ZIP), Suffix.ZIP);
@@ -99,22 +95,6 @@ public class DecompressorIT {
         Assert.assertTrue("First entry should be \"entries/entry-1.txt\"", entryList.get(0).equals("entries/entry-1.txt"));
         Assert.assertTrue("Second entry should be \"entries/entry-2.txt\"", entryList.get(1).equals("entries/entry-2.txt"));
         Assert.assertTrue("Third entry should be \"entries/entry-3.txt\"", entryList.get(2).equals("entries/entry-3.txt"));
-    }
-
-    @Test
-    public void single_image_file_input_should_generate_map_with_one_content_jpg_entry_key_and_entry_value_containing_JFIF() {
-        Decompressor.of(getClass().getResourceAsStream("/sample-image.jpg"), Suffix.JPG).read().entrySet().forEach(e -> {
-            Assert.assertEquals("Entry.key should be \"content.jpg\"", "content.jpg", e.getKey());
-            Assert.assertTrue("Bas64 encoded Entry.value should start with \"/9j/\"", new String(Base64.getEncoder().encode(e.getValue())).startsWith("/9j/"));
-        });
-    }
-
-    @Test
-    public void input_from_tecxt_file_should_generate_map_with_one_content_txt_entry_key() {
-        Decompressor.of(getClass().getResourceAsStream("/plain-text-file.txt"), Suffix.TXT).read().entrySet().forEach(e -> {
-            Assert.assertEquals("Entry.key should be \"content.txt\"", "content.txt", e.getKey());
-            Assert.assertTrue("Entry.value should start with \"Lorem ipsum\"", new String(e.getValue()).startsWith("Lorem ipsum"));
-        });
     }
 
     private static ByteArrayInputStream getEmptyTextInputStream() {

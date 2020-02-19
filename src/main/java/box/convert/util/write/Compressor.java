@@ -22,47 +22,13 @@ public interface Compressor {
      * @return File
      */
     File toFile();
-    
+
     default OutputStream write() {
         File file = toFile();
         try {
             return new FileOutputStream(file);
         } catch (FileNotFoundException ex) {
             throw new CompressUtilException("Could not create output stream from file: " + file, ex);
-        }
-    }
-
-    public static Compressor of(byte[] content, File resultFile) {
-        Suffix suffix = Suffix.find(resultFile.getName().substring(resultFile.getName().lastIndexOf(".") + 1)).orElse(Suffix.TXT);
-        return of(content, resultFile, suffix);
-    }
-
-    /**
-     * Creates a file from single content.
-     *
-     * @param content
-     * @param suffix
-     * @param resultFile
-     * @return
-     */
-    public static Compressor of(byte[] content, File resultFile, Suffix suffix) {
-        if (!suffix.isWriteable()) {
-            throw new CompressUtilException("The file format \"" + suffix.get() + "\" is not supported");
-        }
-        switch (suffix) {
-            case GIF:
-            case JPG:
-            case PDF:
-            case PNG:
-                return new PlainFileWriter(content, resultFile);
-            case CSV:
-            case JSON:
-            case TXT:
-                return new PlainFileWriter(content, resultFile);
-            case GZ:
-                return new GzCompressor(content, resultFile);
-            default:
-                return Compressor.of(Collections.singletonMap(resultFile.getName(), content), resultFile, suffix);
         }
     }
 
@@ -102,14 +68,6 @@ public interface Compressor {
             throw new CompressUtilException("The file format \"" + suffix.get() + "\" is not supported");
         }
         switch (suffix) {
-            case GIF:
-            case JPG:
-            case PNG:
-                return of(content.values().iterator().next(), resultFile, suffix);
-            case TXT:
-            case CSV:
-            case GZ:
-                return of(content.values().iterator().next(), resultFile, suffix);
             case EAR:
             case JAR:
             case WAR:
@@ -120,9 +78,6 @@ public interface Compressor {
             case TGZ:
                 return new TgzCompressor(content, resultFile);
             case ZIP:
-                return new ZipCompressor(content, resultFile);
-            case DEFAULT:
-                return content.keySet().size() == 1 ? new PlainFileWriter(content.values().iterator().next(), resultFile) : new ZipCompressor(content, resultFile);
             default:
                 return new ZipCompressor(content, resultFile);
         }

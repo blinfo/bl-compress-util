@@ -9,16 +9,10 @@ import java.util.Optional;
  * @author hl
  */
 public enum Suffix {
-    CSV,
     EAR,
     EXE,
-    GIF,
     GZ,
     JAR,
-    JPG,
-    JSON,
-    PDF,
-    PNG,
     SEVEN_Z {
         @Override
         public String get() {
@@ -27,10 +21,9 @@ public enum Suffix {
     },
     TAR_GZ,
     TGZ,
-    TXT,
     WAR,
-    ZIP,
-    DEFAULT;
+    ZIP;
+    public static final Suffix DEFAULT = ZIP;
 
     /**
      * Return a string representation of the suffix.
