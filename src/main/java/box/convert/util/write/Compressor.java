@@ -3,6 +3,9 @@ package box.convert.util.write;
 import box.convert.util.CompressUtilException;
 import box.convert.util.Suffix;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Map;
 
@@ -18,7 +21,16 @@ public interface Compressor {
      *
      * @return File
      */
-    File write();
+    File toFile();
+    
+    default OutputStream write() {
+        File file = toFile();
+        try {
+            return new FileOutputStream(file);
+        } catch (FileNotFoundException ex) {
+            throw new CompressUtilException("Could not create output stream from file: " + file, ex);
+        }
+    }
 
     public static Compressor of(byte[] content, File resultFile) {
         Suffix suffix = Suffix.find(resultFile.getName().substring(resultFile.getName().lastIndexOf(".") + 1)).orElse(Suffix.TXT);
@@ -78,7 +90,7 @@ public interface Compressor {
      * Creates archive file with content from map.
      * <p>
      * The type of archive generated is specified by the suffix.
-     * 
+     *
      *
      * @param content
      * @param suffix

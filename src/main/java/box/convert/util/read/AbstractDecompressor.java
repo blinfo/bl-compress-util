@@ -27,5 +27,4 @@ abstract class AbstractDecompressor implements Decompressor {
     }
 
     abstract void populateResultMap();
-
 }

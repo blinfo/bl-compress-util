@@ -48,7 +48,7 @@ class GzCompressor implements Compressor {
     }
 
     @Override
-    public File write() {
+    public File toFile() {
         try {
             GzipCompressorOutputStream output = createOutputStream();
             IOUtils.copy(new ByteArrayInputStream(content), output);

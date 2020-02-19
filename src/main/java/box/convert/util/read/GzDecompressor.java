@@ -13,19 +13,12 @@ import org.apache.commons.compress.utils.IOUtils;
  */
 class GzDecompressor extends AbstractDecompressor {
 
-    private final String name;
-
-    private GzDecompressor(InputStream input, String name) {
+    private GzDecompressor(InputStream input) {
         super(input);
-        this.name = name;
     }
 
     public static GzDecompressor from(InputStream input) {
-        return new GzDecompressor(input, "content");
-    }
-
-    public static GzDecompressor of(InputStream input, String name) {
-        return new GzDecompressor(input, name);
+        return new GzDecompressor(input);
     }
 
     @Override
@@ -34,7 +27,8 @@ class GzDecompressor extends AbstractDecompressor {
             GzipCompressorInputStream gzipInput = new GzipCompressorInputStream(input);
             try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
                 IOUtils.copy(gzipInput, output);
-                result.put(name, output.toByteArray());
+                String entryName = "content.gz";
+                result.put(entryName, output.toByteArray());
             }
             IOUtils.closeQuietly(gzipInput);
         } catch (IOException ex) {

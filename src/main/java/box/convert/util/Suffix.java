@@ -3,7 +3,7 @@ package box.convert.util;
 import java.util.Optional;
 
 /**
- * 
+ *
  * Supported file suffices
  *
  * @author hl

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class Helper {
         try {
             File file = File.createTempFile("testfile", suffix.get());
             file.deleteOnExit();
-            Compressor.of(generateMap(numberOfEntries), file, suffix).write();
+            Compressor.of(generateMap(numberOfEntries), file, suffix).toFile();
             return file;
         } catch (IOException ex) {
             throw new CompressUtilException(ex);
@@ -57,7 +58,7 @@ public class Helper {
 
     public static File createTestFile(Suffix suffix) throws IOException {
         Map<String, byte[]> content = createContentMap();
-        File temp = Compressor.of(content, File.createTempFile("non-ascii-entries", "." + suffix.get())).write();
+        File temp = Compressor.of(content, File.createTempFile("non-ascii-entries", "." + suffix.get())).toFile();
         temp.deleteOnExit();
         return temp;
     }

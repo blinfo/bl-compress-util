@@ -22,7 +22,7 @@ class PlainFileWriter implements Compressor {
     }
 
     @Override
-    public File write() {
+    public File toFile() {
         try {
             Files.write(result.toPath(), content);
             Logger.getLogger(PlainFileWriter.class.getName()).log(Level.INFO, "Written to file: {0}", result.getPath());

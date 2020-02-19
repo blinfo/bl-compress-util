@@ -18,7 +18,7 @@ abstract class AbstractCompressor implements Compressor {
     }
 
     @Override
-    public File write() {
+    public File toFile() {
         return process();
     }
 

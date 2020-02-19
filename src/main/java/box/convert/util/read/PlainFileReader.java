@@ -1,6 +1,7 @@
 package box.convert.util.read;
 
 import box.convert.util.CompressUtilException;
+import box.convert.util.Suffix;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,26 +13,29 @@ import org.apache.commons.compress.utils.IOUtils;
  */
 class PlainFileReader extends AbstractDecompressor {
 
-    private final String name;
+    private final Suffix suffix;
 
-    private PlainFileReader(InputStream input, String name) {
+    private PlainFileReader(InputStream input, Suffix suffix) {
         super(input);
-        this.name = name;
+        this.suffix = suffix;
     }
 
     public static PlainFileReader from(InputStream input) {
-        return PlainFileReader.of(input, "temp-file.txt");
+        return of(input, Suffix.TXT);
     }
-
-    public static PlainFileReader of(InputStream input, String name) {
-        return new PlainFileReader(input, name);
+    
+    public static PlainFileReader of(InputStream input, Suffix suffix) {
+        return new PlainFileReader(input, suffix);
     }
 
     @Override
     void populateResultMap() {
-        String entryName = name.contains("/") ? name.substring(name.lastIndexOf("/") + 1) : name;
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             IOUtils.copy(input, outputStream);
+            String entryName = "content";
+            if (suffix != null) {
+                entryName += "." + suffix.get();
+            }
             result.put(entryName, outputStream.toByteArray());
             IOUtils.closeQuietly(input);
         } catch (IOException ex) {

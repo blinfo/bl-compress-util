@@ -7,8 +7,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -68,5 +72,27 @@ public class CompressorIT {
         Map<String, String> resultMap = Decompressor.of(new FileInputStream(temp), zip).read().entrySet()
                 .stream().collect(Collectors.toMap(e -> e.getKey(), e -> new String(e.getValue())));
         assertTrue(expectedMap.equals(resultMap), "The map (converted to string values) should be equal to the expected map");
+    }
+
+    @Test
+    public void test_consistency_between_input_and_outpu_maps() {
+        try {
+            Map<String, byte[]> inputMap = Collections.singletonMap("test.txt", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.".getBytes());
+            File temp = File.createTempFile("test-file", ".tgz");
+            temp.deleteOnExit();
+            File resultingTempFile = Compressor.of(inputMap, temp, Suffix.TGZ).toFile();
+            Map<String, byte[]> outputMap = Decompressor.of(new FileInputStream(temp), Suffix.TGZ).read();
+            assertTrue(resultingTempFile.getName().startsWith("test-file"),"Resulting file name should start with \"test-file\"");
+            assertTrue(resultingTempFile.getName().endsWith(".tgz"),"Resulting file name should end with \".tgz\"");
+            assertTrue(temp.exists(), "TempFile should have been created");
+            assertTrue(temp.length() > 180, "TempFile length should exceed 180");
+            assertTrue(outputMap.containsKey("test.txt"), "Output map should contain Entry.key \"test.txt\"");
+            assertTrue(inputMap.size() == 1, "Input map should contain 1 entry");
+            assertTrue(outputMap.size() == 1, "Output map should contain 1 entry");
+            assertEquals(inputMap.keySet().iterator().next(), outputMap.keySet().iterator().next());
+            assertTrue(Arrays.equals(inputMap.values().iterator().next(), outputMap.values().iterator().next()), "Value should be equal in input and output maps");
+        } catch (IOException ex) {
+            Logger.getLogger(CompressorIT.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
