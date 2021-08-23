@@ -23,3 +23,5 @@
 hs_err_pid*
 /target/
 /nbproject/
+!/src/test/resources/two-files.tar.gz
+!/src/test/resources/two-files.zip
