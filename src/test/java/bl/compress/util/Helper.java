@@ -1,7 +1,6 @@
 package bl.compress.util;
 
-import bl.compress.util.CompressUtilException;
-import bl.compress.util.Suffix;
+import bl.compress.util.exception.CompressUtilException;
 import bl.compress.util.write.Compressor;
 import java.io.BufferedReader;
 import java.io.File;

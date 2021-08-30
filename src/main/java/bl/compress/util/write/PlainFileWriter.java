@@ -1,6 +1,6 @@
 package bl.compress.util.write;
 
-import bl.compress.util.CompressUtilException;
+import bl.compress.util.exception.CompressUtilException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

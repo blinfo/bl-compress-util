@@ -1,6 +1,6 @@
 package bl.compress.util.read;
 
-import bl.compress.util.CompressUtilException;
+import bl.compress.util.exception.UnreadableSourceException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +37,7 @@ class ZipDecompressor extends AbstractDecompressor {
                 zipEntry = zipInputStream.getNextEntry();
             }
         } catch (IOException ex) {
-            throw new CompressUtilException("Could not read source", ex);
+            throw new UnreadableSourceException(ex);
         }
     }
 }

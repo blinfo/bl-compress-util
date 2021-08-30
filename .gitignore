@@ -25,3 +25,4 @@ hs_err_pid*
 /nbproject/
 !/src/test/resources/two-files.tar.gz
 !/src/test/resources/two-files.zip
+/nb-configuration.xml

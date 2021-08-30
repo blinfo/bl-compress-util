@@ -1,7 +1,8 @@
 package bl.compress.util.write;
 
-import bl.compress.util.CompressUtilException;
 import bl.compress.util.Suffix;
+import bl.compress.util.exception.EmptyContentException;
+import bl.compress.util.exception.UnsupportedFileFormatException;
 import java.io.File;
 import java.util.Collections;
 import java.util.Map;
@@ -35,7 +36,7 @@ public interface Compressor {
      */
     public static Compressor of(byte[] content, File resultFile, Suffix suffix) {
         if (!suffix.isWriteable()) {
-            throw new CompressUtilException("The file format \"" + suffix.get() + "\" is not supported");
+            throw new UnsupportedFileFormatException(suffix);
         }
         switch (suffix) {
             case GIF:
@@ -71,7 +72,6 @@ public interface Compressor {
             suffix = Suffix.find(resultFile.getName().substring(resultFile.getName().lastIndexOf(".") + 1)).orElse(Suffix.DEFAULT);
         }
         return of(content, resultFile, suffix);
-
     }
 
     /**
@@ -86,8 +86,11 @@ public interface Compressor {
      * @return
      */
     public static Compressor of(Map<String, byte[]> content, File resultFile, Suffix suffix) {
+        if (content.isEmpty()) {
+            throw new EmptyContentException();
+        }
         if (!suffix.isWriteable()) {
-            throw new CompressUtilException("The file format \"" + suffix.get() + "\" is not supported");
+            throw new UnsupportedFileFormatException(suffix);
         }
         switch (suffix) {
             case GIF:
@@ -110,7 +113,9 @@ public interface Compressor {
             case ZIP:
                 return new ZipCompressor(content, resultFile);
             case DEFAULT:
-                return content.keySet().size() == 1 ? new PlainFileWriter(content.values().iterator().next(), resultFile) : new ZipCompressor(content, resultFile);
+                return content.keySet().size() == 1 
+                        ? new PlainFileWriter(content.values().iterator().next(), resultFile) 
+                        : new ZipCompressor(content, resultFile);
             default:
                 return new ZipCompressor(content, resultFile);
         }

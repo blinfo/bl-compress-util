@@ -1,12 +1,11 @@
 package bl.compress.util.write;
 
-import bl.compress.util.CompressUtilException;
+import bl.compress.util.exception.CompressUtilException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;

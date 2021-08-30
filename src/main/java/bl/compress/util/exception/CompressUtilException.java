@@ -1,4 +1,4 @@
-package bl.compress.util;
+package bl.compress.util.exception;
 
 /**
  *

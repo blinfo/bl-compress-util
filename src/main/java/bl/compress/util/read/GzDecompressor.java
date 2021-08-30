@@ -1,6 +1,6 @@
 package bl.compress.util.read;
 
-import bl.compress.util.CompressUtilException;
+import bl.compress.util.exception.UnreadableSourceException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +38,7 @@ class GzDecompressor extends AbstractDecompressor {
             }
             IOUtils.closeQuietly(gzipInput);
         } catch (IOException ex) {
-            throw new CompressUtilException("Could not read source", ex);
+            throw new UnreadableSourceException(ex);
         }
     }
 }
