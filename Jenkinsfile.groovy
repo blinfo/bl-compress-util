@@ -7,7 +7,7 @@ pipeline {
         stage('Build and deploy artifact'){
             agent {
                 docker {
-                    image 'blinfo/maven:3.6.1-jdk-11'
+                    image 'blinfo/maven:3.6.3-jdk-13'
                     args '-u root'
                 }
             }
