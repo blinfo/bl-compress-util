@@ -32,14 +32,10 @@ class SevenZCompressor extends AbstractCompressor {
     }
 
     private void compressToFile(String name, byte[] content, SevenZOutputFile output) {
-        try {
-            File file = new File(name);
-            SevenZArchiveEntry entry = output.createArchiveEntry(file, name);
-            output.putArchiveEntry(entry);
-            write(content, output);
-        } catch (IOException ex) {
-            throw new CompressUtilException("Could not create entry: " + name, ex);
-        }
+        File file = new File(name);
+        SevenZArchiveEntry entry = output.createArchiveEntry(file, name);
+        output.putArchiveEntry(entry);
+        write(content, output);
     }
 
     private void write(byte[] content, SevenZOutputFile output) {
