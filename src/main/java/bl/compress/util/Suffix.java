@@ -1,9 +1,10 @@
 package bl.compress.util;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
- * 
+ *
  * Supported file suffices
  *
  * @author hl
@@ -58,13 +59,11 @@ public enum Suffix {
      * @return Optional Suffix
      */
     public static Optional<Suffix> find(String string) {
-        if (string != null && !string.isEmpty()) {
-            for (Suffix s : values()) {
-                if (s.name().equalsIgnoreCase(string) || s.get().equalsIgnoreCase(string.replaceAll("_", "."))) {
-                    return Optional.of(s);
-                }
-            }
+        if (string == null || string.isBlank()) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        return Stream.of(values())
+                .filter(s -> s.name().equalsIgnoreCase(string) || s.get().equalsIgnoreCase(string.replaceAll("_", ".")))
+                .findFirst();
     }
 }

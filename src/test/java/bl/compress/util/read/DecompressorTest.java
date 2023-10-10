@@ -1,15 +1,11 @@
 package bl.compress.util.read;
 
-import bl.compress.util.Helper;
-import bl.compress.util.Suffix;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
+import bl.compress.util.*;
+import java.io.*;
+import java.util.*;
 import java.util.stream.Collectors;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -66,18 +62,18 @@ public class DecompressorTest {
     public void input_with_multiple_zipped_files_should_generate_expected_content() {
         List<String> contentList = Decompressor.of(Helper.generateInputStream(3, Suffix.ZIP), Suffix.ZIP)
                 .read().values().stream().map(String::new).collect(Collectors.toList());
-        assertTrue("First entry should start with \"Lorem ipsum dolor\"", contentList.get(0).startsWith("Lorem ipsum dolor"));
-        assertTrue("Second entry should start with \"Pharetra vel turpis\"", contentList.get(1).startsWith("Pharetra vel turpis"));
-        assertTrue("Third entry should start with \"Convallis aenean et\"", contentList.get(2).startsWith("Convallis aenean et"));
+        assertTrue(contentList.get(0).startsWith("Lorem ipsum dolor"));
+        assertTrue(contentList.get(1).startsWith("Pharetra vel turpis"));
+        assertTrue(contentList.get(2).startsWith("Convallis aenean et"));
     }
 
     @Test
     public void input_with_multiple_zipped_files_should_generate_expected_file_names() {
         List<String> entryList = Decompressor.of(Helper.generateInputStream(3, Suffix.ZIP), Suffix.ZIP)
                 .read().keySet().stream().collect(Collectors.toList());
-        assertTrue("First entry should be \"entries/entry-1.txt\"", entryList.get(0).equals("entries/entry-1.txt"));
-        assertTrue("Second entry should be \"entries/entry-2.txt\"", entryList.get(1).equals("entries/entry-2.txt"));
-        assertTrue("Third entry should be \"entries/entry-3.txt\"", entryList.get(2).equals("entries/entry-3.txt"));
+        assertTrue(entryList.get(0).equals("entries/entry-1.txt"));
+        assertTrue(entryList.get(1).equals("entries/entry-2.txt"));
+        assertTrue(entryList.get(2).equals("entries/entry-3.txt"));
     }
     
     @Test
@@ -90,12 +86,12 @@ public class DecompressorTest {
         long textFileSize = 18011l;
         String imageFileName = "sample-image.jpg";
         long imageFileSize = 85276l;
-        assertTrue("Entry list should contain filename " + textFileName, entryList.contains(textFileName));
-        assertTrue("Entry list should contain filename " + imageFileName, entryList.contains(imageFileName));
-        assertTrue("text-file should have content", result.get(textFileName).length > 0);
-        assertEquals("text-file should be " + textFileSize + " bytes", textFileSize, result.get(textFileName).length);
-        assertTrue("image-file should have content", result.get(imageFileName).length > 0);
-        assertEquals("image-file should be " + imageFileSize + " bytes", imageFileSize, result.get(imageFileName).length);
+        assertTrue(entryList.contains(textFileName));
+        assertTrue(entryList.contains(imageFileName));
+        assertTrue(result.get(textFileName).length > 0);
+        assertEquals(textFileSize, result.get(textFileName).length);
+        assertTrue(result.get(imageFileName).length > 0);
+        assertEquals(imageFileSize, result.get(imageFileName).length);
     }
 
     @Test
@@ -108,12 +104,12 @@ public class DecompressorTest {
         long textFileSize = 18011l;
         String imageFileName = "sample-image.jpg";
         long imageFileSize = 85276l;
-        assertTrue("Entry list should contain filename " + textFileName, entryList.contains(textFileName));
-        assertTrue("Entry list should contain filename " + imageFileName, entryList.contains(imageFileName));
-        assertTrue("text-file should have content", result.get(textFileName).length > 0);
-        assertEquals("text-file should be " + textFileSize + " bytes", textFileSize, result.get(textFileName).length);
-        assertTrue("image-file should have content", result.get(imageFileName).length > 0);
-        assertEquals("image-file should be " + imageFileSize + " bytes", imageFileSize, result.get(imageFileName).length);
+        assertTrue(entryList.contains(textFileName));
+        assertTrue(entryList.contains(imageFileName));
+        assertTrue(result.get(textFileName).length > 0);
+        assertEquals(textFileSize, result.get(textFileName).length);
+        assertTrue(result.get(imageFileName).length > 0);
+        assertEquals(imageFileSize, result.get(imageFileName).length);
     }
 
     @Test
@@ -126,12 +122,12 @@ public class DecompressorTest {
         long textFileSize = 18011l;
         String imageFileName = "sample-image.jpg";
         long imageFileSize = 85276l;
-        assertTrue("Entry list should contain filename " + textFileName, entryList.contains(textFileName));
-        assertTrue("Entry list should contain filename " + imageFileName, entryList.contains(imageFileName));
-        assertTrue("text-file should have content", result.get(textFileName).length > 0);
-        assertEquals("text-file should be " + textFileSize + " bytes", textFileSize, result.get(textFileName).length);
-        assertTrue("image-file should have content", result.get(imageFileName).length > 0);
-        assertEquals("image-file should be " + imageFileSize + " bytes", imageFileSize, result.get(imageFileName).length);
+        assertTrue(entryList.contains(textFileName));
+        assertTrue(entryList.contains(imageFileName));
+        assertTrue(result.get(textFileName).length > 0);
+        assertEquals(textFileSize, result.get(textFileName).length);
+        assertTrue(result.get(imageFileName).length > 0);
+        assertEquals(imageFileSize, result.get(imageFileName).length);
     }
 
     private static ByteArrayInputStream getEmptyTextInputStream() {
